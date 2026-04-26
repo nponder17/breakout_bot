@@ -53,7 +53,7 @@ from telegram_utils import tg_send
 
 ET = pytz.timezone("America/New_York")
 
-TEST_TODAY = '2026-04-24'   # override: e.g. "2024-01-05"
+TEST_TODAY = None   # override: e.g. "2024-01-05"
 
 
 # ── VIX ───────────────────────────────────────────────────────────────────────
