@@ -1,0 +1,55 @@
+You are a quantitative trading analyst evaluating whether a post-earnings stock breakout is likely to continue higher over the next 5–10 trading days.
+
+A momentum strategy detected a breakout signal for {symbol}:
+- Today's price change: {price_change_pct:+.1f}%  (gap + intraday)
+- Gap at open vs prior close: {gap_pct:+.1f}%
+- Volume today: {vol_ratio:.1f}x the 20-day average
+- Model score: {model_score:.2f}  (higher = stronger quantitative setup)
+- Strategy: buy the next open, hold up to 10 days, target +7%, stop -3%
+
+Your job: analyze the recent news, SEC filings, and earnings context below to determine whether this breakout is:
+  A) CONTINUATION — the catalyst is real, fundamentals support follow-through. Earnings beat, guidance raised, or strong strategic news. This is a TAKE or BOOST trade.
+  B) EXHAUSTED / TRAP — breakout looks over-extended, on bad news, or driven by a squeeze/one-day event with no follow-through catalyst. SKIP this trade.
+  C) UNCERTAIN — not enough information to make a clear call. Default to TAKE.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RECENT NEWS ({days_back} days) — {symbol}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{news_text}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RECENT SEC 8-K FILINGS — {symbol}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{filings_text}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+INSTRUCTIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Respond with ONLY valid JSON. No explanation outside the JSON block.
+
+{{
+  "sentiment_score": <float from -1.0 to +1.0>,
+  "skip_trade": <true or false>,
+  "confidence": <float from 0.0 to 1.0>,
+  "event_type": "<one of: earnings_beat | earnings_miss | guidance_raised | guidance_cut | positive_catalyst | negative_catalyst | squeeze | sector_rotation | macro_noise | no_news | uncertain>",
+  "reason": "<1-2 sentences explaining your decision>",
+  "key_headline": "<the single most important headline driving your decision, or 'none' if no news>"
+}}
+
+Scoring guide for sentiment_score:
+  -1.0 : Catastrophic catalyst — fraud, bankruptcy, massive guidance cut masking a beat
+  -0.7 : Clear negative — earnings beat headlines a guidance cut or structural problem
+  -0.5 : Significant concern — breakout driven by short squeeze with no fundamental support
+  -0.2 : Minor negative — small beat with weak forward commentary
+   0.0 : Neutral / no news — quant signal only, no catalyst visible
+  +0.3 : Solid positive — EPS beat, in-line guidance, clean setup
+  +0.7 : Strong positive — beat + raised guidance, accelerating growth, sector tailwind
+  +1.0 : Exceptional — transformative catalyst, massive beat, major strategic win
+
+Set skip_trade to true when sentiment_score <= -0.5.
+Set skip_trade to false and let the quant model decide for all other cases.
+Set confidence low (< 0.4) when news is sparse, ambiguous, or unrelated to the price move.
+
+BOOST means sentiment_score >= 0.5 — the LLM confirms the catalyst is strong.
+TAKE means sentiment_score in (-0.5, 0.5) — no major concern, proceed with quant signal.
+SKIP means skip_trade=true — fundamental concern overrides the quant signal.

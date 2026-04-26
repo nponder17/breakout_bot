@@ -1,0 +1,10 @@
+alpaca-trade-api
+anthropic
+python-dotenv
+requests
+pandas
+numpy
+scikit-learn
+yfinance
+pytz
+psycopg[binary]   # optional — only needed if using Postgres instead of SQLite

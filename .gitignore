@@ -1,0 +1,5 @@
+.env
+__pycache__/
+*.pyc
+breakout_bot_state.sqlite
+*.sqlite
